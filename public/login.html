@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+</head>
+<body>
+
+  <h2>Login</h2>
+  <form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="user_type">user_type</label>
+    <input type="user_type" id="user_type" name="user_type" required>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="response"></div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const user_type = document.getElementById('user_type').value;
+
+  // Fetch the login route
+  const response = await fetch('/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password, user_type })
+  });
+
+  const result = await response.json();
+
+  // Log the result for debugging purposes
+  console.log(result);
+
+  // Display the response message on the page
+  document.getElementById('response').innerText = result.message;
+
+  // Role-based redirection logic
+  if (response.ok && result.user_type) {
+    if (result.user_type === 'seller') {
+      window.location.href = '/dashboard'; // Redirect seller to dashboard
+    } else if (result.user_type === 'client') {
+      window.location.href = '/products'; // Redirect client to product listing page
+    }
+  } else {
+    console.log(result.user_type);
+    alert('Invalid credentials');
+  }
+  if(user_type === seller){
+    window.location.href='/dashboard';
+  }
+    else{
+window.location.href='/products';
+    }
+  
+});
+
+  </script>
+
+</body>
+</html>

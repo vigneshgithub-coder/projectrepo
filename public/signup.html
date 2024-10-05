@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+</head>
+<body>
+
+  <h2>Sign Up</h2>
+  <form id="signupForm">
+    <label for="username">sellername:</label>
+    <input type="text" id="sellername" name="sellername" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="user_type">user type(seller or client)</label>
+    <input type="user_type" id="user_type" name="user_type" required>
+
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <div id="response"></div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('sellername').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const user_type= document.getElementById('user_type').value;
+      const response = await fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, email, password ,user_type})
+      });
+
+      const result = await response.json();
+      document.getElementById('response').innerText = result.message;
+    });
+
+
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value; // 'seller' or 'client'
+
+    const response = await fetch('/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, email, password, role })
+    });
+
+    const result = await response.json();
+    if (result.message === 'User created successfully.') {
+        alert('Signup successful. Please login.');
+        window.location.href = '/login';
+    } else {
+        alert(result.message);
+    }
+});
+
+  </script>
+
+</body>
+</html>

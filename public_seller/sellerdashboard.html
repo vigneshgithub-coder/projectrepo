@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 600px; margin: auto; }
+        form { margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Seller Dashboard</h1>
+        <form id="addProductForm">
+            <label for="product_name">Product Name:</label>
+            <input type="text" id="product_name" name="product_name" required>
+            
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required>
+            
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="5" required></textarea>
+            
+            <label for="image_url">Image URL:</label>
+            <input type="text" id="image_url" name="image_url" required>
+            
+            <button type="submit">Add Product</button>
+        </form>
+
+        <h2>Existing Products</h2>
+        <div id="productList"></div>
+    </div>
+
+    <form id="addProductForm">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required><br><br>
+    
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required><br><br>
+    
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+    
+        <button type="submit">Add Product</button>
+    </form>
+
+    <script>
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const product_name = document.getElementById('product_name').value;
+            const price = document.getElementById('price').value;
+            const description = document.getElementById('description').value;
+            const image_url = document.getElementById('image_url').value;
+
+            fetch('/add-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    seller_id: 1, // Assume seller is logged in and seller_id is 1
+                    product_name,
+                    price,
+                    description,
+                    image_url,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Product added successfully.') {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+
+        function loadProducts() {
+            fetch('/products')
+                .then(response => response.json())
+                .then(products => {
+                    const productList = document.getElementById('productList');
+                    productList.innerHTML = '';
+                    products.forEach(product => {
+                        productList.innerHTML += `
+                            <div>
+                                <h3>${product.product_name}</h3>
+                                <p>${product.description}</p>
+                                <p>Price: $${product.price}</p>
+                                <img src="${product.image_url}" alt="${product.product_name}" style="width:100px;height:100px;">
+                                <button onclick="editProduct(${product.id})">Edit</button>
+                                <button onclick="deleteProduct(${product.id})">Delete</button>
+                            </div>
+                            <hr>
+                        `;
+                    });
+                });
+        }
+
+        function editProduct(id) {
+            // Logic for editing product goes here
+        }
+
+        function deleteProduct(id) {
+            fetch(`/delete-product/${id}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Product deleted successfully.') {
+                        alert(data.message);
+                        location.reload();
+                    }
+                });
+        }
+
+        loadProducts();
+
+       
+
+
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const productName = document.getElementById('productName').value;
+        const price = document.getElementById('price').value;
+        const description = document.getElementById('description').value;
+
+        const response = await fetch('/add-product', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productName, price, description })
+        });
+
+        const result = await response.json();
+        if (result.message === 'Product added successfully.') {
+            alert('Product added');
+        } else {
+            alert(result.message);
+        }
+    });
+
+
+    </script>
+</body>
+</html>

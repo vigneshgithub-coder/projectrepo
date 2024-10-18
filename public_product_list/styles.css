@@ -1,0 +1,61 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Light grey background */
+    color: #333; /* Dark text color */
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #444; /* Slightly darker header */
+    margin-bottom: 20px;
+}
+
+#cartItemsContainer {
+    background-color: #fff; /* White background for cart items */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px; /* Padding inside the container */
+    margin: 0 auto; /* Center the container */
+    max-width: 600px; /* Limit the width */
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* Lighter border */
+}
+
+.cart-item:last-child {
+    border-bottom: none; /* Remove border from last item */
+}
+
+.cart-total {
+    font-size: 1.5em;
+    margin-top: 20px;
+    text-align: right;
+    color: #555; /* Darker total text */
+    font-weight: bold; /* Bold font for total */
+}
+
+.cart-empty-message {
+    text-align: center;
+    font-size: 1.2em;
+    color: #777; /* Grey color for empty cart message */
+}
+
+/* Button styles for potential future functionality */
+button {
+    background-color: #28a745; /* Green background for buttons */
+    color: #fff; /* White text for buttons */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside button */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+}

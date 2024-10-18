@@ -5,13 +5,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
+  <style>
+    /* Box for the form */
+    .signup-container {
+        width: 300px;
+        padding: 20px;
+        border: 2px solid #000; /* Black outline */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); /* Light shadow */
+        margin: 50px auto; /* Center the form */
+    }
+
+    /* Label styling */
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    /* Input fields styling */
+    input[type="text"], input[type="password"] ,input[type="email"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Submit button styling */
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Register link styling */
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .register-link a {
+        color: blue;
+        text-decoration: none;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+</style>
 </head>
 <body>
-
+<div class="signup-container">
   <h2>Sign Up</h2>
   <form id="signupForm">
-    <label for="clientname">Client Name:</label>
-    <input type="text" id="clientname" name="clientname" required>
+    <label for="name"> Name:</label>
+    <input type="text" id="name" name="clientname" required>
 
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
@@ -19,37 +77,35 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
 
-    <label for="user_type">User Type (seller or client):</label>
-    <input type="text" id="user_type" name="user_type" required>
+   
 
     <button type="submit">Sign Up</button>
   </form>
 
   <div id="response"></div>
-
+</div>
   <script>
     document.getElementById('signupForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      const clientname = document.getElementById('clientname').value;
+      const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const user_type = document.getElementById('user_type').value;
-
+     
       // Make a POST request to the server with the form data
       const response = await fetch('/signup-Client', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ clientname, email, password, user_type })
+        body: JSON.stringify({ name, email, password })
       });
 
       const result = await response.json();
       document.getElementById('response').innerText = result.message;
       
       // Handle successful signup (optional redirect)
-      if (result.message === 'Client created successfully.') {
+      if (result.message === 'User created successfully') {
         alert('Signup successful. Please log in.');
         window.location.href = '/login';
       } else {

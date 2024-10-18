@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Welcome, Admin!</h1>
+
+        <!-- Section to manage products -->
+        <section id="product-management">
+            <h2>Product Management</h2>
+            <button onclick="addProduct()">Add Product</button>
+            <button onclick="editProduct()">Edit Product</button>
+            <button onclick="deleteProduct()">Delete Product</button>
+        </section>
+
+        <!-- Section to manage users -->
+        <section id="user-management">
+            <h2>User Management</h2>
+            <button onclick="viewUsers()">View Users</button>
+            <button onclick="deleteUser()">Delete User</button>
+        </section>
+
+        <!-- Section to manage orders -->
+        <section id="order-management">
+            <h2>Order Management</h2>
+            <button onclick="viewOrders()">View Orders</button>
+            <button onclick="manageOrders()">Manage Orders</button>
+        </section>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // admin.js
+async function addProduct() {
+    // Logic to gather product information and send a POST request to add a new product
+    const product = {
+        seller_id: 1, // Replace with actual logged-in seller ID
+        product_name: prompt('Enter product name:'),
+        price: prompt('Enter product price:'),
+        description: prompt('Enter product description:'),
+        image_url: prompt('Enter product image URL:')
+    };
+
+    const response = await fetch('/add-product', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+    });
+
+    const result = await response.json();
+    alert(result.message);
+}
+
+async function deleteProduct() {
+    const productId = prompt('Enter product ID to delete:');
+    const response = await fetch(`/delete-product/${productId}`, { method: 'DELETE' });
+
+    const result = await response.json();
+    alert(result.message);
+}
+
+async function viewUsers() {
+    const response = await fetch('/users');
+    const users = await response.json();
+
+    console.log(users); // Display users in console or render in a new section
+    alert(JSON.stringify(users));
+}
+
+async function deleteUser() {
+    const userId = prompt('Enter user ID to delete:');
+    const response = await fetch(`/delete-user/${userId}`, { method: 'DELETE' });
+
+    const result = await response.json();
+    alert(result.message);
+}
+
+async function viewOrders() {
+    const response = await fetch('/orders');
+    const orders = await response.json();
+
+    console.log(orders); // Display orders in console or render in a new section
+    alert(JSON.stringify(orders));
+}
+
+async function manageOrders() {
+    // Logic to manage orders (update status, delete, etc.)
+    const orderId = prompt('Enter order ID to manage:');
+    alert(`Manage order ${orderId}`); // Placeholder for order management
+}
+
+    </script>
+</body>
+</html>

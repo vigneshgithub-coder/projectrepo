@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<head>
+    <title>
+        order details page
+    </title>
+
+
+   <style>
+        .order-item{
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+    </head>
+<body>
+    <h1>
+        order details
+    </h1>
+    <div id="oderscontainer"></div>
+    <script>
+        document.addEventListener('domcontentloaded',()=>{
+            fetchorders();
+        });
+        function fetchOrders(){
+            fetch('/orders')
+            .then(response =>response.json())
+            .then(data=>{
+                displayOrders(data);
+            })
+            .catch(error =>console.error('error fetching order',error));
+
+        }
+        function displayOrders(orders){
+            const container= document.getElementById('orderscontianer');
+            container.ineerhtml = ''; // clear the container
+            
+            if(orders.length === 0){
+                container.innerhtml = '<p>no orders found</p>';
+                return;
+            }
+            
+            orders.forEach(order=>{
+                const orderDiv = document.createElement('div');
+                orderDiv.className='order-item';
+                orderDiv.innerhtml=`
+                <span>${order.product_name}</span>
+                <span>$${order.price.tofixed(2)}</span>`
+                ;
+                container.appendChild(orderDiv);
+            });
+        
+        }
+    </script>
+</body>
+</html>

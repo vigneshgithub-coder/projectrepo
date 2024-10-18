@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .cart-total {
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Your Cart</h1>
+    <div id="cartItemsContainer"></div>
+    <div class="cart-total">
+        Total: $<span id="cartTotal">0.00</span>
+    </div>
+    <button class="confirm-order" id="confirmOrderButton">Confirm Order</button>
+     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCartItems();
+
+            // Add event listener for confirming the order
+            document.getElementById('confirmOrderButton').addEventListener('click', confirmOrder);
+        });
+
+        function displayCartItems() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = ''; // Clear the container
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Your cart is empty.</p>';
+                return;
+            }
+
+            let total = 0;
+
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <span>${item.name}</span>
+                    <span>$${item.price.toFixed(2)}</span>
+                `;
+                container.appendChild(cartItem);
+                total += item.price;
+            });
+
+            document.getElementById('cartTotal').innerText = total.toFixed(2);
+        }
+
+        // Function to confirm the order
+        function confirmOrder() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert("Your cart is empty. Cannot confirm the order.");
+                return;
+            }
+
+            // Here you can implement the order confirmation logic
+            // For example, you can send the order details to your backend
+
+            // Clear the cart after confirmation
+            localStorage.removeItem('cart');
+
+            // Show confirmation message
+            alert("Your order has been confirmed!");
+            // Optionally redirect to a thank you or order summary page
+           
+        }
+
+
+        //function for storing confired order details
+        function confirmOrder() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert("Your cart is empty. Cannot confirm the order.");
+        return;
+    }
+
+    // Send order details to backend
+    fetch('/confirm-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cart),
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        localStorage.removeItem('cart'); // Clear the cart
+     
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("There was a problem confirming your order.");
+    });
+}
+
+    
+
+    </script>
+
+</body>
+</html>

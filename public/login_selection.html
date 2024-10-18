@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
+  <link rel="stylesheet" href="styles.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome Page</title>
-  
+  <title>Select login Type</title>
   <style>
     body {
         font-family: 'Arial', sans-serif;
-        background-color: #f8f9fa; /* Light grey background */
+        background-color: #e9ecef; /* Light background color */
         margin: 0;
         padding: 0;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh; /* Full height */
-        color: #343a40; /* Dark text color */
+        color: #495057; /* Dark text color */
     }
 
     .container {
@@ -28,17 +29,17 @@
         max-width: 400px; /* Max width for larger screens */
     }
 
-    h1 {
+    h2 {
         color: black; /* Blue color for the heading */
-        margin-bottom: 20px; /* Space below the heading */
+        margin-bottom: 30px; /* Space below the heading */
     }
 
-    .btn {
-        background-color: #007bff; /* Blue button */
+    button {
+        background-color: #28a745; /* Green button color for seller */
         color: white; /* White text */
         border: none;
         border-radius: 5px;
-        padding: 15px 30px; /* More padding for buttons */
+        padding: 15px 30px; /* Button padding */
         margin: 10px; /* Space between buttons */
         cursor: pointer;
         font-size: 16px; /* Slightly larger text */
@@ -46,14 +47,23 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect on buttons */
     }
 
-    .btn:hover {
-        background-color: #0056b3; /* Darker blue on hover */
+    button:hover {
+        background-color: #218838; /* Darker green on hover */
         transform: translateY(-2px); /* Lift effect on hover */
     }
 
-    .btn:active {
+    button:active {
         transform: translateY(0); /* Reset lift on click */
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Shadow when active */
+    }
+
+    /* Style for the second button (Client) */
+    button:nth-of-type(2) {
+        background-color: #007bff; /* Blue button color for client */
+    }
+
+    button:nth-of-type(2):hover {
+        background-color: #0056b3; /* Darker blue on hover */
     }
 
     /* Add media query for smaller screens */
@@ -62,7 +72,7 @@
             padding: 20px; /* Reduced padding for smaller screens */
         }
 
-        .btn {
+        button {
             padding: 12px 25px; /* Adjusted button size */
             font-size: 14px; /* Smaller font size */
         }
@@ -70,12 +80,10 @@
 </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>Welcome to AgriMinds</h1>
-    <button class="btn" onclick="location.href='/login_selection.html'">Login</button>
-    <button class="btn" onclick="location.href='/signup-selection.html'">Sign Up</button>
+    <h2>Select Account Type</h2>
+    <button onclick="location.href='login-seller.html'">login  as Seller</button>
+    <button onclick="location.href='login-client.html'">login as Client</button>
   </div>
-
 </body>
 </html>

@@ -1,29 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  
-  <link rel="stylesheet" href="styles.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Select Signup Type</title>
-  <style>
-    .container {
-      text-align: center;
-      margin-top: 50px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 20px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Select Account Type</h2>
-    <button onclick="location.href='signup.html'">Sign Up as Seller</button>
-    <button onclick="location.href='signup-client.html'">Sign Up as Client</button>
-  </div>
-</body>
-</html>
+Entities:
+User
+
+user_id (Primary Key)
+username
+email
+password
+role (can be client or seller)
+address
+phone_number
+
+Seller
+ID (Primary Key, as you specified instead of sellerID)
+seller_name
+email
+password
+company_name
+address
+phone_number
+
+Product
+product_id (Primary Key)
+product_name
+price
+description
+image_url
+seller_id (Foreign Key referencing Seller)
+
+Order
+order_id (Primary Key)
+user_id (Foreign Key referencing User)
+order_date
+total_amount
+shipping_address
+
+Order_Detail
+order_detail_id (Primary Key)
+order_id (Foreign Key referencing Order)
+product_id (Foreign Key referencing Product)
+quantity
+price
+
+Cart
+cart_id (Primary Key)
+user_id (Foreign Key referencing User)
+created_at
+
+Cart_Item
+cart_item_id (Primary Key)
+cart_id (Foreign Key referencing Cart)
+product_id (Foreign Key referencing Product)
+quantity
+
+Admin
+admin_id (Primary Key)
+admin_name
+email
+password

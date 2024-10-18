@@ -5,13 +5,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
+  <style>
+    /* Box for the form */
+    .signup-container {
+        width: 300px;
+        padding: 20px;
+        border: 2px solid #000; /* Black outline */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); /* Light shadow */
+        margin: 50px auto; /* Center the form */
+    }
+
+    /* Label styling */
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    /* Input fields styling */
+    input[type="text"], input[type="password"] ,input[type="email"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Submit button styling */
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Register link styling */
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .register-link a {
+        color: blue;
+        text-decoration: none;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+</style>
 </head>
 <body>
+  <div class="signup-container">
 
   <h2>Sign Up</h2>
   <form id="signupForm">
-    <label for="username">sellername:</label>
-    <input type="text" id="sellername" name="sellername" required>
+    <label for="name">name:</label>
+    <input type="text" id="name" name="name" required>
 
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
@@ -19,59 +78,63 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
 
-    <label for="user_type">user type(seller or client)</label>
-    <input type="user_type" id="user_type" name="user_type" required>
+    
 
     <button type="submit">Sign Up</button>
   </form>
+</div>
 
   <div id="response"></div>
 
+
   <script>
+    // Add 'async' to the event listener function
     document.getElementById('signupForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const username = document.getElementById('sellername').value;
+      e.preventDefault(); // Prevent form from refreshing the page
+  
+      const name = document.getElementById('name').value; // Correct ID
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const user_type= document.getElementById('user_type').value;
-      const response = await fetch('/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, email, password ,user_type})
-      });
 
-      const result = await response.json();
-      document.getElementById('response').innerText = result.message;
-    });
-
-
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const role = document.getElementById('role').value; // 'seller' or 'client'
-
-    const response = await fetch('/signup', {
-        method: 'POST',
-        headers: {
+      //log the form data to check if they are being captured correctly
+      //console.log("Name:", name, "Email:", email, "Password:", password);
+  
+      // Perform the fetch request to send signup data
+      try {
+        const response = await fetch('/signup', {
+          method: 'POST',
+          headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, email, password, role })
-    });
+          },
+          body: JSON.stringify({ name, email, password }) // Correct keys
+        });
 
-    const result = await response.json();
-    if (result.message === 'User created successfully.') {
-        alert('Signup successful. Please login.');
-        window.location.href = '/login';
-    } else {
-        alert(result.message);
+        // Check if the response is OK (status 200-299)
+        if (!response.ok) {
+      const errorResponse = await response.json(); // Get error response for more details
+      console.error('Error during signup:', errorResponse.message);
+      alert(errorResponse.message);
+      return; // Exit the function if there's an error
     }
-});
-
+  
+        const result = await response.json();
+        document.getElementById('response').innerText = result.message;
+  
+        // Redirect if signup is successful
+        if (result.message === 'User created successfully.') {
+          alert('Signup successful. Please login.');
+          window.location.href = '/login'; // Redirect to login page
+        } else {
+          alert(result.message); // Show error message if signup fails
+        }
+  
+      } catch (error) {
+        console.error('Error during signup:', error); // Log any errors
+        alert('An error occurred during signup.');
+      }
+    });
   </script>
+  
 
 </body>
 </html>

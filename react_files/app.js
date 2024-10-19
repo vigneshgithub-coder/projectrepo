@@ -87,47 +87,55 @@ app.post('/signup', (req, res) => {
   // Query to insert seller
   const query = `INSERT INTO seller (name, email, password) VALUES (?, ?, ?)`;
   db.query(query, [name, email, password], (err, result) => {
-      // Handle database error
-      if (err) {
-          console.error('Database error:', err);
-          return res.status(500).json({ message: 'Database error.' });
-      }
-      // Log result to see what you get after the insert
-      console.log('Insert result:', result);
-  
-      const sellerID = result.insertId; // Get the inserted ID
-      console.log('Seller ID:', sellerID); // Log the Seller ID
-      
-      
+    console.log("Executing DB query...");
 
-      // Set up email transport
-      const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-              user: 'vigneshwaranmca22@gmail.com',
-              pass: 'mdqi zubh ucjt vamv', // Ensure you use an App Password if 2FA is enabled
-          },
-      });
+    // Handle database error
+    if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Database error.' });
+    }
+    
+    console.log('Insert result:', result);
 
-      // Email options
-      const mailOptions = {
-          from: 'vigneshwaranmca22@gmail.com',
-          to: email,
-          subject: 'Welcome to AgriMinds productly present for Agriculture',
-          text: `Hello ${name},\n\nThank you for creating your account in AgriMinds Your Seller ID is ${sellerID},\n\nBest Regards,\n[AgriMinds]`,
-      };
+    const sellerID = result.insertId; // Get the inserted ID
+    console.log('Seller ID:', sellerID); // Log the Seller ID
 
-      // Send the email
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              console.error('Error sending email:', error);
-              return res.status(500).json({ message: 'Signup successful, but email could not be sent.' });
-          }
-          console.log('Email sent:', info.response);
-          // Send final success response
-          return res.status(200).json({ message: 'Signup successful, confirmation email sent.' });
-      });
-  });
+    // Set up email transport
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'vigneshwaranmca22@gmail.com',
+            pass: 'mdqi zubh ucjt vamv', // Ensure you use an App Password if 2FA is enabled
+        },
+    });
+
+    console.log('Email transporter created successfully.');
+
+    // Email options
+    const mailOptions = {
+        from: 'vigneshwaranmca22@gmail.com',
+        to: email,
+        subject: 'Welcome to AgriMinds productly present for Agriculture',
+        text: `Hello ${name},\n\nThank you for creating your account in AgriMinds. Your Seller ID is ${sellerID},\n\nBest Regards,\n[AgriMinds]`,
+    };
+
+    console.log('Mail options configured:', mailOptions);
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).json({ message: 'Signup successful, but email could not be sent.' });
+        }
+        console.log('Email sent:', info.response);
+        
+    
+          return res.status(200).json({ message: 'User created successfully.' });
+        // console.log('Redirecting to Google...');
+        // res.redirect('/login-seller.html');
+    });
+});
+
 });
 
 //});
@@ -183,15 +191,18 @@ app.post('/login-client', (req, res) => {
     return res.status(400).json({ message: 'Please fill all fields.' });
   }
 
-  const query = `SELECT * FROM client WHERE email = ? AND password = ?`;
+  const query = `SELECT ID FROM client WHERE email = ? AND password = ?`;
   db.query(query, [email, password], (err, results) => {
     if (err) return res.status(500).json({ message: 'Database error.' });
     if (results.length === 0) {
       return res.status(400).json({ message: 'Invalid email or password.' });
     }
-    res.status(200).json({ message: 'Login successful.' });
+
+    const clientID = results[0].ID; // Properly assign the client ID here
+    res.status(200).json({ message: 'Login successful.', client_id: clientID });
   });
 });
+
 
 
 //post route for login-seller
@@ -228,7 +239,7 @@ app.post('/login-seller', (req, res) => {
 
 
   //route to serve product_listing 
-  app.get('/product_listing',(req,res)=>{
+  app. get('/product_listing',(req,res)=>{
     res.sendFile(path.join(__dirname,'public_product_list','product_lisiting.html'));
 
   });
@@ -322,3 +333,282 @@ app.post('/admin/add-product',(req,res)=>{
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
+
+// Serve static files from the 'public_seller' folder
+app.use(express.static(path.join(__dirname, 'public_seller')));
+
+// Route for serving the seller dashboard HTML page
+app.get('/sellerdashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public_seller', 'sellerdashboard.html'));
+});
+
+// Route to handle the root URL `/`
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public_seller', 'sellerdashboard.html'));
+});
+
+// POST route to add a new product
+// POST route to add a new product
+app.post('/add-product', (req, res) => {
+  console.log('Request body:', req.body); // Log the request body
+  const { seller_id, product_name, price, description, image_url } = req.body;
+
+  // Validate input
+  if (!seller_id || !product_name || !price || !description || !image_url) {
+      return res.status(400).json({ message: 'Please fill all fields.' });
+  }
+
+  // Check if seller exists before adding a product
+  const sellerCheckQuery = 'SELECT * FROM seller WHERE id = ?';
+  db.query(sellerCheckQuery, [seller_id], (err, sellerResult) => {
+      if (err) {
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      if (sellerResult.length === 0) {
+          return res.status(404).json({ message: 'Seller not found.' });
+      }
+
+      const query = 'INSERT INTO products (seller_id, product_name, price, description, image_url) VALUES (?, ?, ?, ?, ?)';
+      db.query(query, [seller_id, product_name, price, description, image_url], (err) => {
+          if (err) {
+              console.error('Database Error: ', err);
+              return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+          }
+          res.status(201).json({ message: 'Product added successfully.' });
+      });
+  });
+});
+
+
+
+// PUT route to edit an existing product
+// app.put('/edit-product/:id', (req, res) => {
+//     const { product_name, price, description, image_url } = req.body;
+//     const { id } = req.params;
+
+//     if (!product_name || !price || !description || !image_url) {
+//         return res.status(400).json({ message: 'Please fill all fields.' });
+//     }
+
+//     const query = 'UPDATE products SET product_name = ?, price = ?, description = ?, image_url = ? WHERE id = ?';
+//     db.query(query, [product_name, price, description, image_url, id], (err) => {
+//         if (err) {
+//             console.error('Database Error: ', err);
+//             return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+//         }
+//         res.status(200).json({ message: 'Product updated successfully.' });
+//     });
+// });
+
+// PUT route to edit an existing product
+app.put('/edit-product/:id', (req, res) => {
+  const { product_name, price, description, image_url } = req.body;
+  const { id } = req.params;
+
+  console.log('Request Body:', req.body);  // Log the incoming body
+  console.log('Request Params:', req.params); // Log the incoming params
+
+  // Validate input fields
+  if (!product_name || !price || !description || !image_url) {
+      return res.status(400).json({ message: 'Please fill all fields.' });
+  }
+
+  const query = 'UPDATE products SET product_name = ?, price = ?, description = ?, image_url = ? WHERE id = ?';
+  db.query(query, [product_name, price, description, image_url, id], (err, results) => {
+      if (err) {
+          console.error('Database Error:', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+
+      if (results.affectedRows === 0) {
+          return res.status(404).json({ message: 'Product not found.' });
+      }
+
+      res.status(200).json({ message: 'Product updated successfully.' });
+  });
+});
+
+
+
+// DELETE route to delete a product
+app.delete('/delete-product/:id', (req, res) => {
+    const { id } = req.params;
+
+    const query = 'DELETE FROM products WHERE id = ?';
+    db.query(query, [id], (err) => {
+        if (err) {
+            console.error('Database Error: ', err);
+            return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+        }
+        res.status(200).json({ message: 'Product deleted successfully.' });
+    });
+});
+
+// GET route to retrieve products by seller_id
+app.get('/products/:id', (req, res) => {
+    const seller_id = req.params.id;
+
+    const query = 'SELECT * FROM products WHERE seller_id = ?';
+    db.query(query, [seller_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'No products found for this seller.' });
+        }
+        res.status(200).json(results); // Return all products for the seller
+    });
+});
+
+
+
+// Route to handle the root URL `/`
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public_product_list', 'product_listing.html'));
+});
+
+//middleware setup
+app.use(bodyParser.json());
+
+
+app.get('/cart.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public_product_list', 'cart.html'));
+});
+
+// Route to get all products with optional search query
+app.get('/products', (req, res) => {
+  let query = 'SELECT * FROM products';
+  const searchQuery = req.query.search; // Get the search term from query parameters
+
+  if (searchQuery) {
+      // If a search query is provided, filter products based on product_name
+      query += ' WHERE product_name LIKE ?';
+  }
+
+  db.query(query, [`%${searchQuery || ''}%`], (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error.' });
+      res.json(results); // Send the results back as JSON
+  });
+});
+
+
+// Route to get all orders
+app.get('/orders', (req, res) => {
+  db.query('SELECT * FROM orders', (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error.' });
+      res.json(results); // Send the results back as JSON
+  });
+});
+// Route to confirm an order
+app.post('/confirm-order', (req, res) => {
+  const orderDetails = req.body; // Expecting order details in the body of the request
+
+    // Check if orderDetails is an array and not empty
+  if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
+      return res.status(400).json({ message: 'Invalid order details format. Expected a non-empty array.' });
+  }
+
+
+  // Define the query for inserting order
+  const query = 'INSERT INTO orders (product_name, price, quantity, client_id) VALUES ?';
+  const values = orderDetails.map(item => [item.name, item.price,3,32]); // Assuming quantity is 1 for simplicity
+
+  // Execute the query
+  db.query(query, [values], (err) => {
+      if (err) return res.status(500).json({ message: 'Error saving order.' });
+      res.status(201).json({ message: 'Order confirmed!' });
+  });
+});
+
+
+
+
+
+
+// Example route for serving admin dashboard HTML page
+app.get('admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin','admin.html'));
+});
+
+
+// --- Products Management ---
+
+// GET route to fetch all products
+app.get('/products', (req, res) => {
+  const query = 'SELECT * FROM products';
+  db.query(query, (err, products) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.json(products);
+  });
+});
+
+// POST route to add a new product
+app.post('/add-product', (req, res) => {
+  const { seller_id, product_name, price, description, image_url } = req.body;
+  const query = `INSERT INTO products (seller_id, product_name, price, description, image_url) VALUES (?, ?, ?, ?, ?)`;
+  db.query(query, [seller_id, product_name, price, description, image_url], (err) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.status(201).json({ message: 'Product added successfully.' });
+  });
+});
+
+// DELETE route to delete a product
+app.delete('/delete-product/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `DELETE FROM products WHERE id = ?`;
+  db.query(query, [id], (err) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.status(200).json({ message: 'Product deleted successfully.' });
+  });
+});
+
+// --- Users Management ---
+
+// GET route to fetch all users (sellers)
+app.get('/users', (req, res) => {
+  const query = 'SELECT * FROM client'; // Assuming sellers table holds user info
+  db.query(query, (err, users) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.json(users);
+  });
+});
+
+// DELETE route to delete a user
+app.delete('/delete-user/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `DELETE FROM client WHERE id = ?`;
+  db.query(query, [id], (err) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.status(200).json({ message: 'User deleted successfully.' });
+  });
+});
+
+// --- Orders Management ---
+
+// GET route to fetch all orders
+app.get('/orders', (req, res) => {
+  const query = 'SELECT * FROM orders'; // Assuming orders table exists
+  db.query(query, (err, orders) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.json(orders);
+  });
+});
+

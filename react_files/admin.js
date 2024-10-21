@@ -104,7 +104,7 @@ app.delete('/delete-user/:id', (req, res) => {
 app.get('/orders', (req, res) => {
     const query = 'SELECT * FROM orders'; // Assuming orders table exists
     db.query(query, (err, orders) => {
-        if (err) {
+        if (err) { 
             console.log('Database Error: ', err);
             return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
         }

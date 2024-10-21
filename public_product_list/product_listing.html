@@ -10,9 +10,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f3f0f6;
             color: #f0f0f0;
             margin: 0;
+            background-color: rgb(60, 173, 210);
             padding: 20px;
         }
 
@@ -129,7 +129,7 @@
 <body>
 
     
-    <h1 text.color="black">Product Listing</h1>
+    <h1 text.color="black"></h1>
     <div class="container">
        
     <h1 >Product Listing</h1>
@@ -204,22 +204,87 @@
         }
 
 
-        //function for confirming order
-        function confirmOrder() {
+       // Function for confirming order
+// Function for confirming order
+// function confirmOrder() {
+//     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+//     const clientId = localStorage.getItem('client_id');
+//     console.log(clientId);
+
+//     const requestBody = {
+//         orderDetails: cart,
+//         clientID: clientId
+//     };
+
+//     fetch('/confirm-order', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(requestBody)
+//     })
+//     .then(response => {
+//         console.log('Response status:', response.status); // Log the response status
+//         if (!response.ok) {
+//             return response.json().then(errData => {
+//                 throw new Error(errData.message || 'Network response was not ok');
+//             });
+//         }
+//         return response.json(); // Parse JSON response
+//     })
+//     .then(data => {
+//         alert(data.message);
+//     })
+//     .catch(error => {
+//         console.error('Error confirming order:', error);
+//         alert('There was a problem confirming your order.'); // Show a generic error message
+//     });
+// }
+
+function confirmOrder() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    fetch('/confirm-order', {
+    const clientId = sessionStorage.getItem('client_id');
+
+    cart.forEach(item => {
+                if (!item.quantity) {
+                    item.quantity = 1; // Set default quantity to 1
+                }
+            });
+
+    console.log('Client ID:', clientId); // Log client ID
+    console.log('Cart:', cart); // Log cart contents
+
+    const requestBody = {
+        orderDetails: cart,
+        clientID: clientId
+    };
+
+    fetch(' ', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(cart) // Sending the cart as the order details
+        body: JSON.stringify(requestBody)
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status); // Log the response status
+        if (!response.ok) {
+            return response.json().then(errData => {
+                console.error('Error response:', errData); // Log the error response
+                throw new Error(errData.message || 'Network response was not ok');
+            });
+        }
+        return response.json(); // Parse JSON response
+    })
     .then(data => {
-        alert(data.message); // Show confirmation message
+        alert(data.message); // Show success message
     })
-    .catch(error => console.error('Error confirming order:', error));
+    .catch(error => {
+        console.error('Error confirming order:', error);
+        alert('There was a problem confirming your order.'); // Show a generic error message
+    });
 }
+
 
     </script>
 

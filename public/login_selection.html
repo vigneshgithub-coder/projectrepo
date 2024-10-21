@@ -1,89 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  
-  <link rel="stylesheet" href="styles.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Select login Type</title>
-  <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #e9ecef; /* Light background color */
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Full height */
-        color: #495057; /* Dark text color */
-    }
 
-    .container {
-        text-align: center;
-        background-color: white; /* White background for the container */
-        padding: 40px;
-        border-radius: 12px; /* Rounded corners */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
-        width: 90%; /* Responsive width */
-        max-width: 400px; /* Max width for larger screens */
-    }
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select login Type</title>
+    <style>
+       body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20210902/pngtree-wind-blowing-rice-field-rice-ears-swaying-agricultural-crops-close-up-image_786656.jpg');
+    /* Background image related to agriculture */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height */
+    color: #333; /* Dark color for body text */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-size: cover; /* Cover the entire viewport */
+}
 
-    h2 {
-        color: black; /* Blue color for the heading */
-        margin-bottom: 30px; /* Space below the heading */
-    }
-
-    button {
-        background-color: #28a745; /* Green button color for seller */
-        color: white; /* White text */
-        border: none;
-        border-radius: 5px;
-        padding: 15px 30px; /* Button padding */
-        margin: 10px; /* Space between buttons */
-        cursor: pointer;
-        font-size: 16px; /* Slightly larger text */
-        transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect on buttons */
-    }
-
-    button:hover {
-        background-color: #218838; /* Darker green on hover */
-        transform: translateY(-2px); /* Lift effect on hover */
-    }
-
-    button:active {
-        transform: translateY(0); /* Reset lift on click */
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Shadow when active */
-    }
-
-    /* Style for the second button (Client) */
-    button:nth-of-type(2) {
-        background-color: #007bff; /* Blue button color for client */
-    }
-
-    button:nth-of-type(2):hover {
-        background-color: #0056b3; /* Darker blue on hover */
-    }
-
-    /* Add media query for smaller screens */
-    @media (max-width: 500px) {
         .container {
-            padding: 20px; /* Reduced padding for smaller screens */
+            text-align: center;
+            background-color: white;
+            /* White background for the container */
+            padding: 40px;
+            border-radius: 12px;
+            /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            /* Soft shadow */
+            width: 90%;
+            /* Responsive width */
+            max-width: 400px;
+            /* Max width for larger screens */
+        }
+
+        h2 {
+            color: black;
+            /* Blue color for the heading */
+            margin-bottom: 30px;
+            /* Space below the heading */
         }
 
         button {
-            padding: 12px 25px; /* Adjusted button size */
-            font-size: 14px; /* Smaller font size */
+            background-color: #28a745;
+            /* Green button color for seller */
+            color: white;
+            /* White text */
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            /* Button padding */
+            margin: 10px;
+            /* Space between buttons */
+            cursor: pointer;
+            font-size: 16px;
+            /* Slightly larger text */
+            transition: background-color 0.3s, transform 0.2s;
+            /* Smooth transitions */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            /* Shadow effect on buttons */
         }
-    }
-</style>
+
+        button:hover {
+            background-color: #218838;
+            /* Darker green on hover */
+            transform: translateY(-2px);
+            /* Lift effect on hover */
+        }
+
+        button:active {
+            transform: translateY(0);
+            /* Reset lift on click */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            /* Shadow when active */
+        }
+
+        /* Style for the second button (Client) */
+        button:nth-of-type(2) {
+            background-color: #007bff;
+            /* Blue button color for client */
+        }
+
+        button:nth-of-type(2):hover {
+            background-color: #0056b3;
+            /* Darker blue on hover */
+        }
+
+        /* Add media query for smaller screens */
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+                /* Reduced padding for smaller screens */
+            }
+
+            button {
+                padding: 12px 25px;
+                /* Adjusted button size */
+                font-size: 14px;
+                /* Smaller font size */
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <h2>Select Account Type</h2>
-    <button onclick="location.href='login-seller.html'">login  as Seller</button>
-    <button onclick="location.href='login-client.html'">login as Client</button>
-  </div>
+    <div class="container">
+        <h2>Select Account Type</h2>
+        <button onclick="location.href='login-seller.html'">login as Seller</button>
+        <button onclick="location.href='login-client.html'">login as Client</button>
+    </div>
 </body>
+
 </html>

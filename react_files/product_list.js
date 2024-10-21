@@ -58,6 +58,7 @@ app.get('/orders', (req, res) => {
 // Route to confirm an order
 app.post('/confirm-order', (req, res) => {
     const orderDetails = req.body; // Expecting order details in the body of the request
+    console.log("---> we are insider product_list")
 
       // Check if orderDetails is an array and not empty
     if (!Array.isArray(orderDetails) || orderDetails.length === 0) {

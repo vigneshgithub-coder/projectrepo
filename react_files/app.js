@@ -1,3 +1,5 @@
+// Imports
+
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -293,11 +295,7 @@ db.query(query,[sellerID],(err,results)=>{
       }else{
         return req.status(400).json({message:'Invalid email or pasword'});
 
-      }
-        
-    
-
-      
+      }      
     });*/
   //});
 
@@ -402,19 +400,19 @@ app.post('/add-product', (req, res) => {
 
 // PUT route to edit an existing product
 app.put('/edit-product/:id', (req, res) => {
-  const { product_name, price, description, image_url } = req.body;
+  const { product_name, price, description } = req.body;
   const { id } = req.params;
 
   console.log('Request Body:', req.body);  // Log the incoming body
   console.log('Request Params:', req.params); // Log the incoming params
 
   // Validate input fields
-  if (!product_name || !price || !description || !image_url) {
+  if (!product_name || !price || !description) {
       return res.status(400).json({ message: 'Please fill all fields.' });
   }
 
-  const query = 'UPDATE products SET product_name = ?, price = ?, description = ?, image_url = ? WHERE id = ?';
-  db.query(query, [product_name, price, description, image_url, id], (err, results) => {
+  const query = 'UPDATE products SET product_name = ?, price = ?, description = ? WHERE id = ?';
+  db.query(query, [product_name, price, description, id], (err, results) => {
       if (err) {
           console.error('Database Error:', err);
           return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
@@ -500,26 +498,72 @@ app.get('/orders', (req, res) => {
   });
 });
 // Route to confirm an order
-app.post('/confirm-order', (req, res) => {
-  const orderDetails = req.body; // Expecting order details in the body of the request
+// app.post('/confirm-order', (req, res) => {
+//   const orderDetails = req.body; // Expecting order details in the body of the request
 
-    // Check if orderDetails is an array and not empty
+//     // Check if orderDetails is an array and not empty
+//   if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
+//       return res.status(400).json({ message: 'Invalid order details format. Expected a non-empty array.' });
+//   }
+
+
+//   // Define the query for inserting order
+//   const clientID = localStorage.getItem('client_id');
+
+// // Ensure clientID exists and modify your query
+// const query = 'INSERT INTO orders (product_name, price, quantity, client_id) VALUES ?';
+// const values = orderDetails.map(item => [item.name, item.price, item.quantity, clientID]);
+
+//   // Execute the query
+//   db.query(query, [values], (err) => {
+//       if (err) return res.status(500).json({ message: 'Error saving order.' });
+//       res.status(201).json({ message: 'Order confirmed!' });
+//   });
+// });
+
+
+
+
+app.post('/confirm-order', (req, res) => {
+  console.log('Received order request:', req.body); // Log the received request body
+  const orderDetails = req.body.orderDetails; // Destructure orderDetails and clientID
+  const clientID = req.body.clientID;
+
+  // Log received data for debugging
+  console.log('Received order details:', orderDetails);
+  console.log('Received client ID:', clientID);
+
+  // Check if orderDetails is an array and not empty
   if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
       return res.status(400).json({ message: 'Invalid order details format. Expected a non-empty array.' });
   }
 
+  // Check if clientID is provided
+  if (!clientID) {
+      return res.status(400).json({ message: 'Client ID is required.' });
+  }
+
+  // Validate each order item
+  const invalidItems = orderDetails.filter(item => !item.name || typeof item.price !== 'number' || typeof item.quantity !== 'number');
+  if (invalidItems.length > 0) {
+      return res.status(400).json({ message: 'Invalid order item format.' });
+  }
 
   // Define the query for inserting order
   const query = 'INSERT INTO orders (product_name, price, quantity, client_id) VALUES ?';
-  const values = orderDetails.map(item => [item.name, item.price,3,32]); // Assuming quantity is 1 for simplicity
+  const values = orderDetails.map(item => [item.name, item.price, item.quantity, clientID]);
 
   // Execute the query
   db.query(query, [values], (err) => {
-      if (err) return res.status(500).json({ message: 'Error saving order.' });
+      if (err) {
+          console.error('Database error:', err.message); // Log error message
+          console.error(err.stack); // Log stack trace for debugging
+          return res.status(500).json({ message: 'Error saving order.' });
+      }
       res.status(201).json({ message: 'Order confirmed!' });
+      
   });
 });
-
 
 
 
@@ -585,6 +629,19 @@ app.get('/users', (req, res) => {
   });
 });
 
+// GET route to fetch all users (sellers)
+app.get('/sellers', (req, res) => {
+  const query = 'SELECT * FROM seller'; // Assuming sellers table holds user info
+  db.query(query, (err, users) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.json(users);
+  });
+});
+
+
 // DELETE route to delete a user
 app.delete('/delete-user/:id', (req, res) => {
   const { id } = req.params;
@@ -597,6 +654,20 @@ app.delete('/delete-user/:id', (req, res) => {
       res.status(200).json({ message: 'User deleted successfully.' });
   });
 });
+
+// DELETE route to delete a user
+app.delete('/delete-seller/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `DELETE FROM seller WHERE id = ?`;
+  db.query(query, [id], (err) => {
+      if (err) {
+          console.log('Database Error: ', err);
+          return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
+      }
+      res.status(200).json({ message: 'User deleted successfully.' });
+  });
+});
+
 
 // --- Orders Management ---
 
@@ -612,3 +683,5 @@ app.get('/orders', (req, res) => {
   });
 });
 
+
+app.use(express.static('public'));

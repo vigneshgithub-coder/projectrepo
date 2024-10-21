@@ -7,16 +7,26 @@
   
   <style>
     body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f8f9fa; /* Light grey background */
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Full height */
-        color: #343a40; /* Dark text color */
-    }
+    font-family: 'Arial', sans-serif;
+    background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20210902/pngtree-wind-blowing-rice-field-rice-ears-swaying-agricultural-crops-close-up-image_786656.jpg');
+    /* Background image related to agriculture */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height */
+    color: #333; /* Dark color for body text */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-size: cover; /* Cover the entire viewport */
+}
+
+.welcome-to-agri
+{
+
+   color: #28a745;
+}
 
     .container {
         text-align: center;
@@ -72,7 +82,7 @@
 <body>
 
   <div class="container">
-    <h1>Welcome to AgriMinds</h1>
+    <h1 class="welcome-to-agri">Welcome to AgriMinds</h1>
     <button class="btn" onclick="location.href='/login_selection.html'">Login</button>
     <button class="btn" onclick="location.href='/signup-selection.html'">Sign Up</button>
   </div>

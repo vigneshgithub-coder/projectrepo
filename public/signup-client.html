@@ -8,12 +8,13 @@
   <style>
     /* Box for the form */
     .signup-container {
-        width: 300px;
+      width: 300px;
         padding: 20px;
         border: 2px solid #000; /* Black outline */
         border-radius: 10px; /* Rounded corners */
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); /* Light shadow */
         margin: 50px auto; /* Center the form */
+        background-color: #dbe7eb; 
     }
 
     /* Label styling */
@@ -62,6 +63,21 @@
     .register-link a:hover {
         text-decoration: underline;
     }
+    body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20210902/pngtree-wind-blowing-rice-field-rice-ears-swaying-agricultural-crops-close-up-image_786656.jpg');
+    /* Background image related to agriculture */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height */
+    color: #333; /* Dark color for body text */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-size: cover; /* Cover the entire viewport */
+}
 </style>
 </head>
 <body>
@@ -105,9 +121,9 @@
       document.getElementById('response').innerText = result.message;
       
       // Handle successful signup (optional redirect)
-      if (result.message === 'User created successfully') {
+      if (result.message === 'User created successfully.') {
         alert('Signup successful. Please log in.');
-        window.location.href = '/login';
+        window.location.href = '/login-client.html';
       } else {
         alert(result.message);
       }

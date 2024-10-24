@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Admin Login</h2>
+    <form id="adminLoginForm">
+        <input type="text" id="adminUsername" placeholder="Admin Username" required>
+        <input type="password" id="adminPassword" placeholder="Admin Password" required>
+        <button type="submit">Login</button>
+        <p class="error" id="errorMsg">Invalid credentials. Please try again.</p>
+    </form>
+</div>
+
+<script >document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Hardcoded admin credentials
+    const hardcodedUsername = 'admin';
+    const hardcodedPassword = 'admin123';
+
+    // Get user input
+    const username = document.getElementById('adminUsername').value;
+    const password = document.getElementById('adminPassword').value;
+
+    // Validate credentials
+    if (username === hardcodedUsername && password === hardcodedPassword) {
+        // Redirect to admin dashboard
+        window.location.href = 'admin.html';
+    } else {
+        // Display error message
+        document.getElementById('errorMsg').style.display = 'block';
+    }
+});
+</script>
+</body>
+</html>

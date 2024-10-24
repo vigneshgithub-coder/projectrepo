@@ -47,9 +47,9 @@ app.get('/products', (req, res) => {
 
 // POST route to add a new product
 app.post('/add-product', (req, res) => {
-    const { seller_id, product_name, price, description, image_url } = req.body;
-    const query = `INSERT INTO products (seller_id, product_name, price, description, image_url) VALUES (?, ?, ?, ?, ?)`;
-    db.query(query, [seller_id, product_name, price, description, image_url], (err) => {
+    const { seller_id, product_name, price, description, image_url, stackQuantity } = req.body;
+    const query = `INSERT INTO products (seller_id, product_name, price, description, image_url,stackQuantity) VALUES (?, ?, ?, ?, ?)`;
+    db.query(query, [seller_id, product_name, price, description, image_url,stackQuantity], (err) => {
         if (err) {
             console.log('Database Error: ', err);
             return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });

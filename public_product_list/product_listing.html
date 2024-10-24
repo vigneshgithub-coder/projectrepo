@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Listing</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -180,7 +180,8 @@
                     <img src="${product.image_url}" alt="${product.product_name}">
                     <h3>${product.product_name}</h3>
                     <p>${product.description}</p>
-                    <div class="price">$${product.price.toFixed(2)}</div>
+                    <div class="price">price.Rs:${product.price.toFixed(2)}</div>
+                    <p>AvailableQuantity:${product.stackQuantity}  Kg</p>
                     <button onclick="addToCart(${product.id}, '${product.product_name}', ${product.price})">Add to Cart</button>
                 `;
                 container.appendChild(productDiv);
@@ -203,44 +204,6 @@
             document.getElementById('cart-count').innerText = cart.length;
         }
 
-
-       // Function for confirming order
-// Function for confirming order
-// function confirmOrder() {
-//     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-//     const clientId = localStorage.getItem('client_id');
-//     console.log(clientId);
-
-//     const requestBody = {
-//         orderDetails: cart,
-//         clientID: clientId
-//     };
-
-//     fetch('/confirm-order', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(requestBody)
-//     })
-//     .then(response => {
-//         console.log('Response status:', response.status); // Log the response status
-//         if (!response.ok) {
-//             return response.json().then(errData => {
-//                 throw new Error(errData.message || 'Network response was not ok');
-//             });
-//         }
-//         return response.json(); // Parse JSON response
-//     })
-//     .then(data => {
-//         alert(data.message);
-//     })
-//     .catch(error => {
-//         console.error('Error confirming order:', error);
-//         alert('There was a problem confirming your order.'); // Show a generic error message
-//     });
-// }
-
 function confirmOrder() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const clientId = sessionStorage.getItem('client_id');
@@ -253,6 +216,7 @@ function confirmOrder() {
 
     console.log('Client ID:', clientId); // Log client ID
     console.log('Cart:', cart); // Log cart contents
+    console.log('stackquantity',stackquantity) ; // log stackquantity 
 
     const requestBody = {
         orderDetails: cart,

@@ -1,0 +1,134 @@
+/* Overall body styling */
+body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #2C3E50; /* Dark blue-gray background */
+    color: #ECF0F1; /* Light gray text */
+}
+
+/* Style the cart icon */
+.cart-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 26px;
+    cursor: pointer;
+    background-color: #E74C3C; /* Bright red for cart */
+    padding: 12px;
+    border-radius: 50%;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+.cart-icon:hover {
+    transform: scale(1.1);
+}
+.cart-icon i {
+    color: #ffffff; /* White cart icon */
+}
+#cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #2ECC71; /* Bright green for cart count */
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 6px 8px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Container styling */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #34495E; /* Mid-tone blue-gray */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Search container */
+.search-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+.search-container input {
+    padding: 12px;
+    width: 300px;
+    border: 1px solid #1ABC9C; /* Soft teal for borders */
+    border-radius: 8px;
+    background-color: #2C3E50;
+    color: #ffffff;
+}
+.search-container button {
+    padding: 12px;
+    background-color: #1ABC9C; /* Teal background */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+.search-container button:hover {
+    background-color: #16A085; /* Darker teal on hover */
+}
+
+/* Product grid styling */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+/* Individual product cards */
+.product-card {
+    background-color: #1A252F; /* Dark background for products */
+    border: 1px solid #3498DB; /* Light blue border */
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+.product-card:hover {
+    transform: translateY(-10px); /* Elevate on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+.product-card h3 {
+    font-size: 1.4em;
+    margin: 10px 0;
+    color: #1ABC9C; /* Teal text for product names */
+}
+.product-card p {
+    margin: 10px 0;
+    color: #BDC3C7; /* Soft gray for descriptions */
+}
+.product-card .price {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #E74C3C; /* Red price text */
+}
+
+/* Add to cart button styling */
+.product-card button {
+    padding: 12px;
+    background-color: #3498DB; /* Blue button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+.product-card button:hover {
+    background-color: #2980B9; /* Darker blue on hover */
+    transform: translateY(-2px);
+}

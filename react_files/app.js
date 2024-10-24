@@ -51,10 +51,6 @@ app.get('/login-client',(req,res)=>{
   res.sendFile(path.join(__dirname,'public','login-client.html'))
 })
 
-// Route to serve signup page
-/*app.get('/signup', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
-});*/
 
 //Example route for serving dashboard HTML page
 app.get('/sellerdashboard', (req, res) => {
@@ -133,14 +129,12 @@ app.post('/signup', (req, res) => {
         
     
           return res.status(200).json({ message: 'User created successfully.' });
-        // console.log('Redirecting to Google...');
-        // res.redirect('/login-seller.html');
+     
     });
 });
 
 });
 
-//});
 
 // POST route for client signup
 app.post('/signup-client', (req, res) => {
@@ -150,10 +144,7 @@ app.post('/signup-client', (req, res) => {
     return res.status(400).json({ message: 'Please fill all fields.' });
   }
  
-  /*Hash password
-  bcrypt.hash(password, saltRounds, (err, hash) => {
-    if (err) return res.status(500).json({ message: 'Error hashing password.' });
-*/
+ 
 
     const query = `INSERT INTO client (name, email, password) VALUES (?, ?, ?)`;
     db.query(query, [name, email, password], (err) => {
@@ -265,40 +256,7 @@ db.query(query,[sellerID],(err,results)=>{
     res.sendFile(path.join(__dirname,'public_seller','sellerdashboard.html'));
   });
 
-  //logout  for session
-  
-  /*// Query user by email
-  const query = `SELECT * FROM user_data WHERE email = ? AND user_type = ?`;
-  db.query(query, [email,user_type], (err, results) => {
-    console.log(results);
-    if (err) return res.status(500).json({ message: 'Database error.' });
-    
-
-    console.log(results);
-    if (results.length === 0) {
-      return res.status(400).json({ message: 'Invalid email or password.' });
-    }
-
-    // Compare hashed password
-    bcrypt.compare(password, results[0].password_hash, (err, isMatch) => {
-      if (err) return res.status(500).json({ message: 'Error comparing passwords.' });
-
-      if (isMatch) {
-        if(user_type ==='admin'){
-          return res.status(200).json({message:'login successfull',user_type:'admiin'});
-        }
-        else{
-          //redirest to seller or client
-          return res.status(200).json({message:'login successfull',user_type:results[0].user_type});
-        }
-
-      }else{
-        return req.status(400).json({message:'Invalid email or pasword'});
-
-      }      
-    });*/
-  //});
-
+ 
 
 //serve the admin dashboard page
 app.get('/admin',(req,res)=>{
@@ -346,13 +304,12 @@ app.get('/', (req, res) => {
 });
 
 // POST route to add a new product
-// POST route to add a new product
 app.post('/add-product', (req, res) => {
   console.log('Request body:', req.body); // Log the request body
-  const { seller_id, product_name, price, description, image_url } = req.body;
+  const { seller_id, product_name, price, description, image_url,stackQuantity} = req.body;
 
   // Validate input
-  if (!seller_id || !product_name || !price || !description || !image_url) {
+  if (!seller_id || !product_name || !price || !description || !image_url || !stackQuantity) {
       return res.status(400).json({ message: 'Please fill all fields.' });
   }
 
@@ -366,9 +323,10 @@ app.post('/add-product', (req, res) => {
           return res.status(404).json({ message: 'Seller not found.' });
       }
 
-      const query = 'INSERT INTO products (seller_id, product_name, price, description, image_url) VALUES (?, ?, ?, ?, ?)';
-      db.query(query, [seller_id, product_name, price, description, image_url], (err) => {
+      const query = 'INSERT INTO products (seller_id, product_name, price, description, image_url, stackQuantity ) VALUES (?, ?, ?, ?, ?,?)';
+      db.query(query, [seller_id, product_name, price, description, image_url,stackQuantity], (err) => {
           if (err) {
+            console.error('Error inserting product into database: ', err);
               console.error('Database Error: ', err);
               return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
           }
@@ -379,24 +337,6 @@ app.post('/add-product', (req, res) => {
 
 
 
-// PUT route to edit an existing product
-// app.put('/edit-product/:id', (req, res) => {
-//     const { product_name, price, description, image_url } = req.body;
-//     const { id } = req.params;
-
-//     if (!product_name || !price || !description || !image_url) {
-//         return res.status(400).json({ message: 'Please fill all fields.' });
-//     }
-
-//     const query = 'UPDATE products SET product_name = ?, price = ?, description = ?, image_url = ? WHERE id = ?';
-//     db.query(query, [product_name, price, description, image_url, id], (err) => {
-//         if (err) {
-//             console.error('Database Error: ', err);
-//             return res.status(500).json({ message: 'Database error: ' + err.sqlMessage });
-//         }
-//         res.status(200).json({ message: 'Product updated successfully.' });
-//     });
-// });
 
 // PUT route to edit an existing product
 app.put('/edit-product/:id', (req, res) => {
@@ -497,29 +437,6 @@ app.get('/orders', (req, res) => {
       res.json(results); // Send the results back as JSON
   });
 });
-// Route to confirm an order
-// app.post('/confirm-order', (req, res) => {
-//   const orderDetails = req.body; // Expecting order details in the body of the request
-
-//     // Check if orderDetails is an array and not empty
-//   if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
-//       return res.status(400).json({ message: 'Invalid order details format. Expected a non-empty array.' });
-//   }
-
-
-//   // Define the query for inserting order
-//   const clientID = localStorage.getItem('client_id');
-
-// // Ensure clientID exists and modify your query
-// const query = 'INSERT INTO orders (product_name, price, quantity, client_id) VALUES ?';
-// const values = orderDetails.map(item => [item.name, item.price, item.quantity, clientID]);
-
-//   // Execute the query
-//   db.query(query, [values], (err) => {
-//       if (err) return res.status(500).json({ message: 'Error saving order.' });
-//       res.status(201).json({ message: 'Order confirmed!' });
-//   });
-// });
 
 
 
@@ -565,10 +482,6 @@ app.post('/confirm-order', (req, res) => {
   });
 });
 
-
-
-
-
 // Example route for serving admin dashboard HTML page
 app.get('admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin','admin.html'));
@@ -590,7 +503,7 @@ app.get('/products', (req, res) => {
 });
 
 // POST route to add a new product
-app.post('/add-product', (req, res) => {
+/*app.post('/add-product', (req, res) => {
   const { seller_id, product_name, price, description, image_url } = req.body;
   const query = `INSERT INTO products (seller_id, product_name, price, description, image_url) VALUES (?, ?, ?, ?, ?)`;
   db.query(query, [seller_id, product_name, price, description, image_url], (err) => {
@@ -600,7 +513,7 @@ app.post('/add-product', (req, res) => {
       }
       res.status(201).json({ message: 'Product added successfully.' });
   });
-});
+});*/
 
 // DELETE route to delete a product
 app.delete('/delete-product/:id', (req, res) => {
